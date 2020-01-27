@@ -83,6 +83,9 @@ const ItemCtrl = (function() {
       //Remove Items
       data.items.splice(index, 1);
     },
+    clearAllItems: function() {
+      data.items = [];
+    },
     setCurrentItem: function(item) {
       data.currentItem = item;
     },
@@ -114,6 +117,7 @@ const UICtrl = (function() {
     additemBtn: ".add-btn",
     updateitemBtn: ".update-btn",
     deleteitemBtn: ".delete-btn",
+    clearBtn: ".clear-btn",
     backBtn: ".back-btn",
     itemnamevalue: "#item-name",
     itemcalorevalue: "#item-calories",
@@ -203,6 +207,15 @@ const UICtrl = (function() {
       ).value = ItemCtrl.getCurrentItem().calories;
       UICtrl.showEditState();
     },
+    removeitemLists: function() {
+      let listitems = document.querySelectorAll(UISelectors.listitems);
+
+      listitems = Array.from(listitems);
+
+      listitems.forEach(function(listitem) {
+        listitem.remove();
+      });
+    },
     hidelist: function() {
       document.querySelector(UISelectors.itemListContainer).style.display =
         "none";
@@ -264,6 +277,11 @@ const AppScript = (function(ItemCtrl, UICtrl) {
     document
       .querySelector(UISelectors.backBtn)
       .addEventListener("click", UICtrl.clearEditState);
+
+    // Delete All Item Event
+    document
+      .querySelector(UISelectors.clearBtn)
+      .addEventListener("click", deleteallitemsclick);
 
     //Disable Submit on Enter
     document.addEventListener("keypress", function(e) {
@@ -367,6 +385,24 @@ const AppScript = (function(ItemCtrl, UICtrl) {
     UICtrl.clearEditState();
 
     e.preventDefault();
+  };
+
+  //Delete all the items
+  const deleteallitemsclick = function() {
+    //Delete all items form data structure
+    ItemCtrl.clearAllItems();
+
+    //Get The Total Calories
+    const totalCalories = ItemCtrl.getTotalCalories();
+
+    //Add Total Calories To Ui
+    UICtrl.showTotalCalories(totalCalories);
+
+    //Remove All List Form UI
+    UICtrl.removeitemLists();
+
+    ///Hide The list from ui
+    UICtrl.hidelist();
   };
 
   //Public Methods
