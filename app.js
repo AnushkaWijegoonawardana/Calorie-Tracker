@@ -1,4 +1,41 @@
 //Storage COntroller
+const StorageCtrl = (function() {
+  //Public Function
+  return {
+    storeItems: function(item) {
+      let items;
+
+      //Check For the items in Local Stroage
+      if (localStorage.getItem("items") === null) {
+        items = [];
+
+        //Push New Items To the ls
+        items.push(item);
+
+        //Set Locat Stroage
+        localStorage.setItem("items", JSON.stringify(items));
+      } else {
+        items = JSON.parse(localStorage.getItem("items"));
+
+        //Push To New Items
+        items.push(item);
+
+        // Reset The Local Storage
+        localStorage.setItem("items", JSON.stringify(items));
+      }
+    },
+    getItemsLocalstore: function() {
+      let items;
+      if (localStorage.getItem("items") === null) {
+        items = [];
+      } else {
+        // items.JSON.parse(localStorage.getItem("items"));
+        items = JSON.parse(localStorage.getItem("items"));
+      }
+      return items;
+    }
+  };
+})();
 
 //Item Controller
 const ItemCtrl = (function() {
@@ -11,10 +48,11 @@ const ItemCtrl = (function() {
 
   //Data Structure
   const data = {
-    items: [
-      //   { id: 1, name: "Bread With Chiken Curry", calories: 1500 },
-      //   { id: 2, name: "Bickets", calories: 600 }
-    ],
+    // items: [
+    //   //   { id: 1, name: "Bread With Chiken Curry", calories: 1500 },
+    //   //   { id: 2, name: "Bickets", calories: 600 }
+    // ],
+    items: StorageCtrl.getItemsLocalstore(),
     currentItem: null,
     totalCalories: 0
   };
@@ -247,7 +285,7 @@ const UICtrl = (function() {
 })();
 
 //App Controller
-const AppScript = (function(ItemCtrl, UICtrl) {
+const AppScript = (function(ItemCtrl, UICtrl, StorageCtrl) {
   //Loding All the event Listners
   const loadEventlistners = function() {
     //Get UI Selectors
@@ -311,6 +349,9 @@ const AppScript = (function(ItemCtrl, UICtrl) {
 
       //Add Total Calories To Ui
       UICtrl.showTotalCalories(totalCalories);
+
+      //Store In Local Storage
+      StorageCtrl.storeItems(newitem);
 
       //Clear The Input Fileds
       UICtrl.clearFileds();
@@ -432,6 +473,6 @@ const AppScript = (function(ItemCtrl, UICtrl) {
       loadEventlistners();
     }
   };
-})(ItemCtrl, UICtrl);
+})(ItemCtrl, UICtrl, StorageCtrl);
 
 AppScript.init();
