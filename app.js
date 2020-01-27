@@ -237,6 +237,11 @@ const AppScript = (function(ItemCtrl, UICtrl) {
       .querySelector(UISelectors.updateitemBtn)
       .addEventListener("click", updateItemClick);
 
+    // Back Button Event
+    document
+      .querySelector(UISelectors.backBtn)
+      .addEventListener("click", UICtrl.clearEditState);
+
     //Disable Submit on Enter
     document.addEventListener("keypress", function(e) {
       if (e.keyCode === 13 || e.which === 13) {
